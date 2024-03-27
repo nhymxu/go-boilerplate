@@ -21,7 +21,6 @@ tests: ## Run all tests and requires a running rabbitmq-server. Use GO_TEST_FLAG
 
 .PHONY: check
 check:
-	#golangci-lint run ./...
 	./scripts/lint.sh
 
 ## tidy: format code and tidy modfile
