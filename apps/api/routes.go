@@ -6,6 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+
+	"rootPrj/pkg/config"
 )
 
 func groupV1Routes(e *echo.Group) {
@@ -22,7 +24,7 @@ func privateRoutesV1(e *echo.Group) *echo.Group {
 	privateGroup := e.Group("")
 	// TODO: can change to JWT auth later: https://echo.labstack.com/docs/middleware/jwt
 	privateGroup.Use(middleware.KeyAuth(func(key string, _ echo.Context) (bool, error) {
-		return key == "valid-key", nil
+		return key == config.ENV.TokenAuth, nil
 	}))
 	privateGroup.Use(validateUserMiddleware)
 	privateGroup.GET("/test_private", testFuncPrivate).Name = "test_private"

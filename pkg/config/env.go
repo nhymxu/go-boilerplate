@@ -13,6 +13,8 @@ type EnvConfigMap struct {
 	Sentry struct {
 		DSN string `mapstructure:"DSN"`
 	}
+
+	TokenAuth string `mapstructure:"TOKEN_AUTH"`
 }
 
 // ENV is global variable for using config in other place
