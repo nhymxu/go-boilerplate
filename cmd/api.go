@@ -19,7 +19,7 @@ var apiServerCmd = &cobra.Command{
 	Short: "API server",
 	Long: `Serve all service on same pod.
 Can scale later.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		port, err := cmd.Flags().GetInt64("port")
 		if err != nil {
 			panic("Get port config error")

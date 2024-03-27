@@ -4,8 +4,6 @@
 run:
   timeout: 5m
   modules-download-mode: readonly
-  skip-files:
-    - "^zz_generated.*"
 
 linters:
   disable-all: true
@@ -58,12 +56,14 @@ linters-settings:
     sections:
       - standard
       - default
-      - prefix(bl-)
+      - prefix(bl-,rootPrj)
 
 issues:
   exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
+  exclude-files:
+    - "^zz_generated.*"
   exclude-rules:
     - path: _test\.go
       linters:

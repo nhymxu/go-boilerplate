@@ -21,7 +21,7 @@ func groupV1Routes(e *echo.Group) {
 func privateRoutesV1(e *echo.Group) *echo.Group {
 	privateGroup := e.Group("")
 	// TODO: can change to JWT auth later: https://echo.labstack.com/docs/middleware/jwt
-	privateGroup.Use(middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
+	privateGroup.Use(middleware.KeyAuth(func(key string, _ echo.Context) (bool, error) {
 		return key == "valid-key", nil
 	}))
 	privateGroup.Use(validateUserMiddleware)
@@ -60,7 +60,7 @@ func validateAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			Active bool
 			Admin  bool
 		}
-		var u *User = nil
+		var u *User
 		if u == nil || !u.Active {
 			log.Warn("User is not found")
 			return ctx.Redirect(http.StatusFound, "/logout")
