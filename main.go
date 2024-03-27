@@ -8,7 +8,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	_ "go.uber.org/automaxprocs"
 
-	"rootPrj/cmd"
+	"github.com/nhymxu/go-boilerplate/cmd"
 )
 
 func main() {

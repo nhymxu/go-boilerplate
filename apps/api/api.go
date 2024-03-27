@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
 
-	"rootPrj/pkg/config"
+	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
 func New() *echo.Echo {

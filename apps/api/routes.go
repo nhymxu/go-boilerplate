@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 
-	"rootPrj/pkg/config"
+	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
 func groupV1Routes(e *echo.Group) {

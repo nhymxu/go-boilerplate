@@ -57,6 +57,7 @@ linters-settings:
       - standard
       - default
       - prefix(bl-,rootPrj)
+      - prefix(github.com/nhymxu/go-boilerplate)
 
 issues:
   exclude-use-default: false

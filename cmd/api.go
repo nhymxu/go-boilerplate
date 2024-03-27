@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	apiApp "rootPrj/apps/api"
+	"github.com/nhymxu/go-boilerplate/apps/api"
 )
 
 var apiServerCmd = &cobra.Command{
@@ -25,7 +25,7 @@ Can scale later.`,
 			panic("Get port config error")
 		}
 
-		e := apiApp.New()
+		e := api.New()
 		if err != nil {
 			panic("Something wrong")
 		}
