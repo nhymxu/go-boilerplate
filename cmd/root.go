@@ -1,15 +1,15 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/TheZeroSlave/zapsentry"
 	"github.com/getsentry/sentry-go"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
 var cfgFile string
@@ -55,36 +55,21 @@ func init() {
 }
 
 func dependencyInit() {
-	initConfig()
+	err := config.LoadConfig(cfgFile)
+	if err != nil {
+		panic("Can't load config from environment")
+	}
+
 	initLog()
 	initSentry()
 }
 
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.AddConfigPath(".")
-		//viper.SetConfigType("yaml")
-		//viper.SetConfigName(".obm-bot-crawler")
-		viper.SetConfigFile(".env")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
-}
-
 func initLog() {
 	var logger *zap.Logger
-	if viper.GetBool("DEBUG") {
-		logger, _ = zap.NewDevelopment()
+	if config.ENV.Debug {
+		logger = zap.Must(zap.NewDevelopment())
 	} else {
-		logger, _ = zap.NewProduction()
+		logger = zap.Must(zap.NewProduction())
 	}
 
 	defer logger.Sync() //nolint:errcheck
@@ -94,11 +79,10 @@ func initLog() {
 }
 
 func initSentry() {
-	if sentryDNS := viper.GetString("SENTRY_DSN"); sentryDNS != "" {
+	if config.ENV.Sentry.DSN != "" {
 		err := sentry.Init(sentry.ClientOptions{
-			Dsn:              sentryDNS,
+			Dsn:              config.ENV.Sentry.DSN,
 			AttachStacktrace: true,
-			Debug:            true,
 		})
 		if err != nil {
 			l.Errorf("Sentry initialization failed: %v", err)
