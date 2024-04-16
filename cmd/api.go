@@ -35,7 +35,7 @@ Can scale later.`,
 		// Start server
 		go func() {
 			if err := e.Start(fmt.Sprintf(":%d", port)); err != nil && !errors.Is(err, http.ErrServerClosed) {
-				e.Logger.Fatal("shutting down the server")
+				e.Logger.Fatalf("shutting down the server. Err: %v", err)
 			}
 		}()
 
