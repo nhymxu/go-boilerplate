@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/brpaz/echozap"
+	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
@@ -28,6 +29,7 @@ func New() *echo.Echo {
 		middleware.Gzip(),
 		middleware.RemoveTrailingSlash(),
 		echozap.ZapLogger(zap.L()),
+		sentryecho.New(sentryecho.Options{}),
 	)
 
 	v1 := e.Group("/v1")
