@@ -30,7 +30,6 @@ func New() *echo.Echo {
 		//middleware.Secure(),
 		//middleware.CORS(),
 		middleware.Gzip(),
-		middleware.RemoveTrailingSlash(),
 		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 			Skipper: func(c echo.Context) bool {
 				if c.Request().URL.Path == "/special-endpoint-can-replace-later" {
