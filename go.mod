@@ -6,7 +6,6 @@ replace rootPrj => ./
 
 require (
 	github.com/TheZeroSlave/zapsentry v1.20.2
-	github.com/brpaz/echozap v1.1.3
 	github.com/getsentry/sentry-go v0.27.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/labstack/gommon v0.4.2
