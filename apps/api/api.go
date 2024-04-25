@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"slices"
 
 	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo/v4"
@@ -39,7 +40,11 @@ func newEchoApp(debug bool) *echo.Echo {
 		middleware.Gzip(),
 		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 			Skipper: func(c echo.Context) bool {
-				if c.Request().URL.Path == "/special-endpoint-can-replace-later" {
+				skipPaths := []string{
+					"/favicon.ico",
+					"/special-endpoint-can-replace-later",
+				}
+				if slices.Contains(skipPaths, c.Request().URL.Path) {
 					return true
 				}
 
