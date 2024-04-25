@@ -14,10 +14,17 @@ import (
 )
 
 func New() *echo.Echo {
+	e := newEchoApp(config.ENV.Debug)
+
+	v1 := e.Group("/v1")
+	groupV1Routes(v1)
+
+	return e
+}
+
+func newEchoApp(debug bool) *echo.Echo {
 	e := echo.New()
-	if config.ENV.Debug {
-		e.Debug = true
-	}
+	e.Debug = debug
 
 	logger := zap.L()
 
@@ -77,9 +84,6 @@ func New() *echo.Echo {
 		}),
 		sentryecho.New(sentryecho.Options{}),
 	)
-
-	v1 := e.Group("/v1")
-	groupV1Routes(v1)
 
 	return e
 }
