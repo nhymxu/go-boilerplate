@@ -44,11 +44,8 @@ func newEchoApp(debug bool) *echo.Echo {
 					"/favicon.ico",
 					"/special-endpoint-can-replace-later",
 				}
-				if slices.Contains(skipPaths, c.Request().URL.Path) {
-					return true
-				}
 
-				return false
+				return slices.Contains(skipPaths, c.Request().URL.Path)
 			},
 			LogURI:          true,
 			LogStatus:       true,
