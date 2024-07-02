@@ -15,6 +15,13 @@ type EnvConfigMap struct {
 	}
 
 	TokenAuth string `mapstructure:"TOKEN_AUTH"`
+
+	BasicAuth struct {
+		Username string `mapstructure:"USERNAME"`
+		Password string `mapstructure:"PASSWORD"`
+	} `mapstructure:"BASIC_AUTH"`
+
+	AppName string `mapstructure:"APP_NAME"`
 }
 
 // ENV is global variable for using config in other place
