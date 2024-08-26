@@ -6,12 +6,12 @@ import (
 	"slices"
 
 	sentryecho "github.com/getsentry/sentry-go/echo"
+	"github.com/karagenc/fj4echo"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/nhymxu/go-boilerplate/pkg/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
 func New() *echo.Echo {
@@ -28,6 +28,8 @@ func newEchoApp(debug bool) *echo.Echo {
 	e.Debug = debug
 
 	logger := zap.L()
+
+	e.JSONSerializer = fj4echo.New()
 
 	e.Use(
 		middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
