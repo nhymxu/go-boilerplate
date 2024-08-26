@@ -1,4 +1,4 @@
-FROM golang:1.22-buster AS build
+FROM golang:1.23-bullseye AS build
 
 WORKDIR /src
 
@@ -9,7 +9,7 @@ COPY . ./
 
 RUN CGO_ENABLED=0 go build -v -o go-app
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN set -x && \
     apt-get update && \
