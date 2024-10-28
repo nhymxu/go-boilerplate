@@ -28,6 +28,7 @@ func newEchoApp(debug bool) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 	e.Debug = debug
+	e.HideBanner = true
 
 	logger := zap.L()
 
