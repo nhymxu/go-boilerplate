@@ -19,7 +19,7 @@ fmt: ## Run go fmt against code
 tests: ## Run all tests and requires a running rabbitmq-server. Use GO_TEST_FLAGS to add extra flags to go test
 	go test -race -v -tags integration $(GO_TEST_FLAGS)
 
-.PHONY: check
+.PHONY: lint
 check:
 	./scripts/lint.sh
 
