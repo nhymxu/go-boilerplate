@@ -32,7 +32,18 @@ tidy: fmt
 find-cgo-pkg:  ## identify which package on project using CGO
 	./scripts/find-cgo-pkg.sh
 
-.PHONE: check-duplicate-code
+.PHONY: check-duplicate-code
 check-duplicate-code: ## identify duplicate code inside a project
 	go install github.com/boyter/dcd@latest
 	dcd
+
+.PHONY: vuln-check
+vuln-check:  ## Scanning source code for vulnerabilities
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck
+
+.PHONY: vuln-check-bin
+vuln-check-bin:  ## Scanning binary for vulnerabilities
+	go build -o test_binary
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck -mode binary -show verbose test_binary
