@@ -47,3 +47,9 @@ vuln-check-bin:  ## Scanning binary for vulnerabilities
 	go build -o test_binary
 	go install golang.org/x/vuln/cmd/govulncheck@latest
 	govulncheck -mode binary -show verbose test_binary
+
+.PHONY: gosec
+gosec:  ## analyses Go source code to look for common programming mistakes that can lead to security problems.
+	go install github.com/securego/gosec/v2/cmd/gosec@latest
+	gosec ./...
+
