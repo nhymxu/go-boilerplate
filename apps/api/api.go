@@ -79,7 +79,7 @@ func newEchoApp(debug bool) *echo.Echo {
 				case n >= 500:
 					logger.With(zap.Error(v.Error)).Error("Server error", fields...)
 				case n >= 400:
-					logger.With(zap.Error(v.Error)).Warn("Client error", fields...)
+					logger.Info("Client error", fields...)
 				case n >= 300:
 					logger.Info("Redirection", fields...)
 				default:
