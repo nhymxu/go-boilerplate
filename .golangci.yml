@@ -1,83 +1,88 @@
-# Refer to golangci-lint's example config file for more options and information:
-# https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
-
-run:
-  timeout: 5m
-  modules-download-mode: readonly
+version: "2"
 
 linters:
-  disable-all: true
+  default: none
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
+    - loggercheck
     - revive
     - staticcheck
-    - typecheck
     - unused
-    - gci
-    - loggercheck
-
-linters-settings:
-  revive:
-    ignore-generated-header: false
-    severity: warning
-    confidence: 0.8
-    errorCode: 0
-    warningCode: 0
+  settings:
+    revive:
+      confidence: 0.8
+      severity: warning
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unused-parameter
+        - name: unreachable-code
+        - name: redefines-builtin-id
+  exclusions:
+    generated: lax
     rules:
-      # default revive recommend rules
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
-      - name: empty-block
-      - name: superfluous-else
-      - name: unused-parameter
-      - name: unreachable-code
-      - name: redefines-builtin-id
-  gci:
-    custom-order: true
-    sections:
-      - standard
-      - default
-      - prefix(bl-,rootPrj)
-      - prefix(github.com/nhymxu/go-boilerplate)
+      - linters:
+          - errcheck
+          - gosec
+          - makezero
+          - rowserrcheck
+        path: _test\.go
+      - linters:
+          - revive
+        text: 'var-naming: don''t use an underscore in package name'
+      - linters:
+          - revive
+        text: exported (type|method|function|var|const) (.+) should have comment or be unexported
+      - linters:
+          - revive
+        text: exported (type|method|function|var|const) (.+) should have comment (.+?) or be unexported
+    paths:
+      - ^zz_generated.*
+      - third_party$
+      - builtin$
+      - examples$
+
+formatters:
+  enable:
+    - gci
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(bl-,rootPrj)
+      custom-order: true
+  exclusions:
+    generated: lax
+    paths:
+      - ^zz_generated.*
+      - third_party$
+      - builtin$
+      - examples$
 
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude-files:
-    - "^zz_generated.*"
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - gosec
-        - rowserrcheck
-        - makezero
-    - linters:
-        - revive
-      text: "var-naming: don't use an underscore in package name"
-    - linters:
-        - revive
-      text: "exported (type|method|function|var|const) (.+) should have comment or be unexported"
-    - linters:
-        - revive
-      text: "exported (type|method|function|var|const) (.+) should have comment (.+?) or be unexported"
+
+run:
+  modules-download-mode: readonly
