@@ -34,6 +34,19 @@ func newEchoApp(debug bool) *echo.Echo {
 
 	e.JSONSerializer = fj4echo.New()
 
+	skipPaths := []string{
+		"/favicon.ico",
+		"/swagger",
+		"/metrics",
+		"/health",
+		"/ping",
+		"/special-endpoint-can-replace-later",
+	}
+
+	skipper := func(c echo.Context) bool {
+		return slices.Contains(skipPaths, c.Request().URL.Path)
+	}
+
 	e.Use(
 		middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 			RedirectCode: http.StatusMovedPermanently,
@@ -42,16 +55,11 @@ func newEchoApp(debug bool) *echo.Echo {
 		middleware.RequestID(),
 		//middleware.Secure(),
 		//middleware.CORS(),
-		middleware.Gzip(),
-		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-			Skipper: func(c echo.Context) bool {
-				skipPaths := []string{
-					"/favicon.ico",
-					"/special-endpoint-can-replace-later",
-				}
-
-				return slices.Contains(skipPaths, c.Request().URL.Path)
-			},
+		middleware.GzipWithConfig(middleware.GzipConfig{
+			Level:   config.APIGzipLevel,
+			Skipper: skipper,
+		}), middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+			Skipper:         skipper,
 			LogURI:          true,
 			LogStatus:       true,
 			LogLatency:      true,
