@@ -1,4 +1,4 @@
-FROM golang:1.24-bullseye AS build
+FROM golang:1.25.1-trixie AS build
 
 WORKDIR /src
 
@@ -9,7 +9,7 @@ COPY . ./
 
 RUN CGO_ENABLED=0 go build -v -o go-app
 
-FROM debian:bullseye-slim
+FROM debian:trixie-slim
 
 RUN set -x && \
     apt-get update && \
