@@ -26,3 +26,11 @@ go get -u ./...
 # API server
 go run main.go api --port 8000 --shutdown_time 10
 ```
+
+## Linting
+
+check deadcode
+
+```shell
+go tool deadcode ./...
+```
