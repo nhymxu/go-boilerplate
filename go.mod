@@ -6,8 +6,8 @@ replace rootPrj => ./
 
 require (
 	github.com/TheZeroSlave/zapsentry v1.23.0
-	github.com/getsentry/sentry-go v0.35.1
-	github.com/getsentry/sentry-go/echo v0.35.1
+	github.com/getsentry/sentry-go v0.36.0
+	github.com/getsentry/sentry-go/echo v0.36.0
 	github.com/karagenc/fj4echo v0.1.3
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/labstack/gommon v0.4.2
