@@ -1,10 +1,18 @@
 .DEFAULT_GOAL := list
 
-# Insert a comment starting with '##' after a target, and it will be printed by 'make' and 'make list'
-.PHONY: list
-list: ## list Makefile targets
-	@echo "The most used targets: \n"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+# Variables
+APP_NAME=go-boilerplate
+
+# Insert a comment starting with '##' after a target, and it will be printed by 'make' and 'make help'
+.PHONY: help
+help: ## list Makefile targets
+	@echo "Available commands: \n"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: deps
+deps: ## Install dependencies
+	go mod download
+	go mod tidy
 
 .PHONY: check-fmt
 check-fmt: ## Ensure code is formatted
@@ -64,4 +72,3 @@ vuln-check-bin:  ## Scanning binary for vulnerabilities
 gosec:  ## analyses Go source code to look for common programming mistakes that can lead to security problems.
 	go install github.com/securego/gosec/v2/cmd/gosec@latest
 	gosec ./...
-
