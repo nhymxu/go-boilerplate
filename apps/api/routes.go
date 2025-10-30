@@ -45,7 +45,6 @@ func validateUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		// TODO: do something like set user from jwt token
 		var err error
-
 		if err != nil {
 			log.Warn(err.Error())
 			return ctx.Redirect(http.StatusFound, "/logout")
@@ -62,6 +61,7 @@ func validateAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			Active bool
 			Admin  bool
 		}
+
 		var u *User
 		if u == nil || !u.Active {
 			log.Warn("User is not found")

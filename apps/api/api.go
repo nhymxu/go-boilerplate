@@ -70,7 +70,7 @@ func newEchoApp(debug bool) *echo.Echo {
 			LogRequestID:    true,
 			LogHost:         true,
 			HandleError:     true,
-			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error { // nolint:revive
 				fields := []zapcore.Field{
 					zap.String("remote_ip", v.RemoteIP),
 					zap.Duration("latency", v.Latency),

@@ -73,6 +73,7 @@ func initLog() {
 	}
 
 	defer logger.Sync() //nolint:errcheck
+
 	zap.ReplaceGlobals(logger)
 
 	l = zap.S()

@@ -11,7 +11,7 @@ linters:
     - staticcheck
     - unused
     - lll
-    - wsl
+    - wsl_v5
   settings:
     revive:
       confidence: 0.8
@@ -48,6 +48,10 @@ linters:
       # Tab width in spaces.
       # Default: 1
       tab-width: 1
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
   exclusions:
     generated: lax
     rules:
@@ -84,7 +88,7 @@ formatters:
       sections:
         - standard
         - default
-        - prefix(bl-,rootPrj)
+        - prefix(bl-,rootPrj,github.com/nhymxu/go-boilerplate)
       custom-order: true
     golines:
       # Target maximum line length.

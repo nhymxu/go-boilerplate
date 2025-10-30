@@ -13,12 +13,15 @@ import (
 
 func main() {
 	defer sentry.Flush(time.Second * 2)
+
 	defer func() {
 		// manually capture panic so we can do our own logging
 		r := recover()
 		if r != nil {
 			fmt.Println("------------------", r, string(debug.Stack()))
+
 			defer sentry.Recover()
+
 			panic(r)
 		}
 	}()
