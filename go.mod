@@ -11,7 +11,7 @@ require (
 	github.com/karagenc/fj4echo v0.1.3
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/labstack/gommon v0.4.2
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	go.uber.org/automaxprocs v1.6.0
 	go.uber.org/zap v1.27.1
