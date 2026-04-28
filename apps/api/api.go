@@ -15,7 +15,7 @@ import (
 )
 
 func New() *echo.Echo {
-	e := newEchoApp(config.ENV.Debug)
+	e := newEchoApp()
 
 	v1 := e.Group("/v1")
 	groupV1Routes(v1)
@@ -23,10 +23,8 @@ func New() *echo.Echo {
 	return e
 }
 
-func newEchoApp(debug bool) *echo.Echo {
+func newEchoApp() *echo.Echo {
 	e := echo.New()
-
-	_ = debug
 
 	logger := zap.L()
 
