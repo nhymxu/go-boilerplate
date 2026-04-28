@@ -6,9 +6,8 @@ import (
 	"slices"
 
 	sentryecho "github.com/getsentry/sentry-go/echo"
-	"github.com/karagenc/fj4echo"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -26,13 +25,10 @@ func New() *echo.Echo {
 
 func newEchoApp(debug bool) *echo.Echo {
 	e := echo.New()
-	e.HideBanner = true
-	e.Debug = debug
-	e.HideBanner = true
+
+	_ = debug
 
 	logger := zap.L()
-
-	e.JSONSerializer = fj4echo.New()
 
 	skipPaths := []string{
 		"/favicon.ico",
@@ -43,12 +39,12 @@ func newEchoApp(debug bool) *echo.Echo {
 		"/special-endpoint-can-replace-later",
 	}
 
-	skipper := func(c echo.Context) bool {
+	skipper := func(c *echo.Context) bool {
 		return slices.Contains(skipPaths, c.Request().URL.Path)
 	}
 
 	e.Use(
-		middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		middleware.RemoveTrailingSlashWithConfig(middleware.RemoveTrailingSlashConfig{
 			RedirectCode: http.StatusMovedPermanently,
 		}),
 		middleware.Recover(),
@@ -70,7 +66,7 @@ func newEchoApp(debug bool) *echo.Echo {
 			LogRequestID:    true,
 			LogHost:         true,
 			HandleError:     true,
-			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error { // nolint:revive
+			LogValuesFunc: func(c *echo.Context, v middleware.RequestLoggerValues) error { // nolint:revive
 				fields := []zapcore.Field{
 					zap.String("remote_ip", v.RemoteIP),
 					zap.Duration("latency", v.Latency),

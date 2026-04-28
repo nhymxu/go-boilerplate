@@ -2,14 +2,14 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/labstack/echo/v5"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 
 	"github.com/nhymxu/go-boilerplate/apps/api"
 	"github.com/nhymxu/go-boilerplate/pkg/config"
@@ -37,27 +37,22 @@ Can scale later.`,
 		}
 
 		e := api.New()
-		if err != nil {
-			panic("Something wrong")
-		}
 
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
-		// Start server
-		go func() {
-			if err := e.Start(fmt.Sprintf("%s:%d", host, port)); err != nil && !errors.Is(err, http.ErrServerClosed) {
-				e.Logger.Fatalf("shutting down the server. Err: %v", err)
-			}
-		}()
 
-		// Wait for interrupt signal to gracefully shut down the server with a timeout of 10 seconds.
-		<-ctx.Done()
-		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(shutdownTime)*time.Second)
-		defer cancel()
-		if err := e.Shutdown(ctx); err != nil {
-			e.Logger.Fatal(err)
+		sc := echo.StartConfig{
+			Address:         fmt.Sprintf("%s:%d", host, port),
+			HideBanner:      true,
+			GracefulTimeout: time.Duration(shutdownTime) * time.Second,
+			OnShutdownError: func(err error) {
+				zap.L().Sugar().Errorf("graceful shutdown error: %v", err)
+			},
 		}
 
+		if err := sc.Start(ctx, e); err != nil {
+			zap.L().Sugar().Fatalf("shutting down the server. Err: %v", err)
+		}
 	},
 }
 
