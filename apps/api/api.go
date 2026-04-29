@@ -79,7 +79,7 @@ func newEchoApp() *echo.Echo {
 					slog.LogAttrs(c.Request().Context(), slog.LevelError, "Server error",
 						append(attrs, slog.Any("error", v.Error))...)
 				case n >= 400:
-					slog.LogAttrs(c.Request().Context(), slog.LevelWarn, "Client error", attrs...)
+					slog.LogAttrs(c.Request().Context(), slog.LevelInfo, "Client error", attrs...)
 				case n >= 300:
 					slog.LogAttrs(c.Request().Context(), slog.LevelInfo, "Redirection", attrs...)
 				default:
