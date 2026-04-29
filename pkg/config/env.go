@@ -49,12 +49,11 @@ func LoadConfig(cfgFile string) error {
 	}
 
 	// Load from config file (optional – skip if file does not exist)
-	if err := k.Load(file.Provider(configFile), dotenv.Parser()); err != nil {
-		if !errors.Is(err, fs.ErrNotExist) {
-			return fmt.Errorf("failed to load config file %s: %w", configFile, err)
-		}
-	} else {
+	err := k.Load(file.Provider(configFile), dotenv.Parser())
+	if err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", configFile)
+	} else if !errors.Is(err, fs.ErrNotExist) {
+		return fmt.Errorf("failed to load config file %s: %w", configFile, err)
 	}
 
 	// Override with actual environment variables (highest precedence)
