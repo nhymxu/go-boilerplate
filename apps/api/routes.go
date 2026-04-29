@@ -3,9 +3,9 @@ package api
 import (
 	"net/http"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/gommon/log"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
+	"go.uber.org/zap"
 
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
@@ -23,11 +23,11 @@ func groupV1Routes(e *echo.Group) {
 func privateRoutesV1(e *echo.Group) *echo.Group {
 	privateGroup := e.Group("")
 	// TODO: can change to JWT auth later: https://echo.labstack.com/docs/middleware/jwt
-	privateGroup.Use(middleware.KeyAuth(func(key string, _ echo.Context) (bool, error) {
+	privateGroup.Use(middleware.KeyAuth(func(_ *echo.Context, key string, _ middleware.ExtractorSource) (bool, error) {
 		return key == config.ENV.TokenAuth, nil
 	}))
 	privateGroup.Use(validateUserMiddleware)
-	privateGroup.GET("/test_private", testFuncPrivate).Name = "test_private"
+	privateGroup.GET("/test_private", testFuncPrivate)
 
 	return privateGroup
 }
@@ -36,17 +36,17 @@ func adminRoutesV1(e *echo.Group) *echo.Group {
 	adminGroup := e.Group("/admin")
 	// TODO: can change to JWT auth later: https://echo.labstack.com/docs/middleware/jwt
 	adminGroup.Use(validateAdminMiddleware)
-	adminGroup.GET("/test", testFuncPrivate).Name = "test_private"
+	adminGroup.GET("/test", testFuncPrivate)
 
 	return adminGroup
 }
 
 func validateUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+	return func(ctx *echo.Context) error {
 		// TODO: do something like set user from jwt token
 		var err error
 		if err != nil {
-			log.Warn(err.Error())
+			zap.L().Warn(err.Error())
 			return ctx.Redirect(http.StatusFound, "/logout")
 		}
 
@@ -55,7 +55,7 @@ func validateUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func validateAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+	return func(ctx *echo.Context) error {
 		// TODO: get user info from context jwt
 		type User struct {
 			Active bool
@@ -64,12 +64,12 @@ func validateAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		var u *User
 		if u == nil || !u.Active {
-			log.Warn("User is not found")
+			zap.L().Warn("User is not found")
 			return ctx.Redirect(http.StatusFound, "/logout")
 		}
 
 		if !u.Admin {
-			log.Warn("User is not an admin")
+			zap.L().Warn("User is not an admin")
 			return ctx.Redirect(http.StatusFound, "/dashboard")
 		}
 
