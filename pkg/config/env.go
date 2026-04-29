@@ -1,20 +1,34 @@
 package config
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 
-	"github.com/spf13/viper"
+	"github.com/knadh/koanf/parsers/dotenv"
+	"github.com/knadh/koanf/providers/confmap"
+	"github.com/knadh/koanf/providers/env"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/v2"
 )
+
+// configDefaults holds default values for all config fields.
+// Nested struct fields use dot-separated koanf tag paths (e.g. "SENTRY.DSN").
+var configDefaults = map[string]any{
+	"DEBUG":      false,
+	"SENTRY.DSN": "",
+	"TOKEN_AUTH": "",
+}
 
 // EnvConfigMap define mapping struct field and environment field
 type EnvConfigMap struct {
-	Debug  bool `mapstructure:"DEBUG"`
+	Debug  bool `koanf:"DEBUG"`
 	Sentry struct {
-		DSN string `mapstructure:"DSN"`
-	}
+		DSN string `koanf:"DSN"`
+	} `koanf:"SENTRY"`
 
-	TokenAuth string `mapstructure:"TOKEN_AUTH"`
+	TokenAuth string `koanf:"TOKEN_AUTH"`
 }
 
 // ENV is global variable for using config in other place
@@ -22,30 +36,30 @@ var ENV EnvConfigMap
 
 // LoadConfig read env file and loaded to environment and global ENV variable
 func LoadConfig(cfgFile string) error {
+	k := koanf.New(".")
+
+	// Load defaults first (lowest precedence)
+	if err := k.Load(confmap.Provider(configDefaults, "."), nil); err != nil {
+		return fmt.Errorf("failed to load default config: %w", err)
+	}
+
+	configFile := ".env"
 	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.AddConfigPath(".")
-		//viper.SetConfigType("yaml")
-		//viper.SetConfigName(".obm-bot-crawler")
-		viper.SetConfigFile(".env")
+		configFile = cfgFile
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	err := viper.ReadInConfig()
+	// Load from config file (optional – skip if file does not exist)
+	err := k.Load(file.Provider(configFile), dotenv.Parser())
 	if err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	} else {
+		fmt.Fprintln(os.Stderr, "Using config file:", configFile)
+	} else if !errors.Is(err, fs.ErrNotExist) {
+		return fmt.Errorf("failed to load config file %s: %w", configFile, err)
+	}
+
+	// Override with actual environment variables (highest precedence)
+	if err := k.Load(env.Provider("", ".", nil), nil); err != nil {
 		return err
 	}
 
-	err = viper.Unmarshal(&ENV)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return k.Unmarshal("", &ENV)
 }
