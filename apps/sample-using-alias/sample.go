@@ -1,9 +1,7 @@
 package sample_using_alias
 
-import "go.uber.org/zap"
+import "log/slog"
 
 func Run() {
-	logger := zap.S()
-
-	logger.Info("Sample app using alias project name")
+	slog.Info("Sample app using alias project name")
 }

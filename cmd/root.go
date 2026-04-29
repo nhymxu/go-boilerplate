@@ -1,19 +1,18 @@
 package cmd
 
 import (
+	"log/slog"
 	"os"
 
-	"github.com/TheZeroSlave/zapsentry"
 	"github.com/getsentry/sentry-go"
+	slogmulti "github.com/samber/slog-multi"
+	slogsentry "github.com/samber/slog-sentry/v2"
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
 var cfgFile string
-var l *zap.SugaredLogger
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -64,19 +63,15 @@ func dependencyInit() {
 	initSentry()
 }
 
-func initLog() {
-	var logger *zap.Logger
+func newBaseHandler() slog.Handler {
 	if config.ENV.Debug {
-		logger = zap.Must(zap.NewDevelopment())
-	} else {
-		logger = zap.Must(zap.NewProduction())
+		return slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})
 	}
+	return slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo})
+}
 
-	defer logger.Sync() //nolint:errcheck
-
-	zap.ReplaceGlobals(logger)
-
-	l = zap.S()
+func initLog() {
+	slog.SetDefault(slog.New(newBaseHandler()))
 }
 
 func initSentry() {
@@ -86,38 +81,22 @@ func initSentry() {
 			AttachStacktrace: true,
 		})
 		if err != nil {
-			l.Errorf("Sentry initialization failed: %v", err)
+			slog.Error("Sentry initialization failed", "error", err)
 		} else {
-			l.Infof("Initialized Sentry integration.")
-			integrateZapWithSentry()
+			slog.Info("Initialized Sentry integration.")
+			integrateSlogWithSentry()
 		}
 	} else {
-		l.Infof("SENTRY_DSN not found, sentry integration disabled.")
+		slog.Info("SENTRY_DSN not found, sentry integration disabled.")
 	}
 }
 
-func integrateZapWithSentry() {
-	log := zap.L()
-	sentryClient := sentry.CurrentHub().Client()
+func integrateSlogWithSentry() {
+	sentryHandler := slogsentry.Option{
+		Level: slog.LevelError,
+	}.NewSentryHandler()
 
-	cfg := zapsentry.Configuration{
-		Level:             zapcore.ErrorLevel, //when to send message to sentry
-		EnableBreadcrumbs: true,               // enable sending breadcrumbs to Sentry
-		BreadcrumbLevel:   zapcore.InfoLevel,  // at what level should we sent breadcrumbs to sentry
-	}
-	core, err := zapsentry.NewCore(cfg, zapsentry.NewSentryClientFromClient(sentryClient))
-
-	//in case of err it will return noop core. so we can safely attach it
-	if err != nil {
-		log.Warn("failed to init zap", zap.Error(err))
-	}
-
-	log = zapsentry.AttachCoreToLogger(core, log)
-
-	// to use breadcrumbs feature - create new scope explicitly
-	// and attach after attaching the core
-	zap.ReplaceGlobals(log.With(zapsentry.NewScope()))
-
-	l = zap.S()
-	l.Info("Integrate uber/zap with Sentry successfully.")
+	handler := slogmulti.Fanout(newBaseHandler(), sentryHandler)
+	slog.SetDefault(slog.New(handler))
+	slog.Info("Integrate slog with Sentry successfully.")
 }
