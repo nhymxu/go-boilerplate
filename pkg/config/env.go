@@ -4,17 +4,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/viper"
+	"github.com/knadh/koanf/parsers/dotenv"
+	"github.com/knadh/koanf/providers/env"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/v2"
 )
 
 // EnvConfigMap define mapping struct field and environment field
 type EnvConfigMap struct {
-	Debug  bool `mapstructure:"DEBUG"`
+	Debug  bool `koanf:"DEBUG"`
 	Sentry struct {
-		DSN string `mapstructure:"DSN"`
-	}
+		DSN string `koanf:"DSN"`
+	} `koanf:"SENTRY"`
 
-	TokenAuth string `mapstructure:"TOKEN_AUTH"`
+	TokenAuth string `koanf:"TOKEN_AUTH"`
 }
 
 // ENV is global variable for using config in other place
@@ -22,30 +25,23 @@ var ENV EnvConfigMap
 
 // LoadConfig read env file and loaded to environment and global ENV variable
 func LoadConfig(cfgFile string) error {
+	k := koanf.New(".")
+
+	configFile := ".env"
 	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.AddConfigPath(".")
-		//viper.SetConfigType("yaml")
-		//viper.SetConfigName(".obm-bot-crawler")
-		viper.SetConfigFile(".env")
+		configFile = cfgFile
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	// Load from config file
+	if err := k.Load(file.Provider(configFile), dotenv.Parser()); err != nil {
+		return fmt.Errorf("failed to load config file %s: %w", configFile, err)
+	}
+	fmt.Fprintln(os.Stderr, "Using config file:", configFile)
 
-	// If a config file is found, read it in.
-	err := viper.ReadInConfig()
-	if err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	} else {
+	// Override with actual environment variables
+	if err := k.Load(env.Provider("", ".", nil), nil); err != nil {
 		return err
 	}
 
-	err = viper.Unmarshal(&ENV)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return k.Unmarshal("", &ENV)
 }
