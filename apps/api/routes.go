@@ -1,11 +1,11 @@
 package api
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
-	"go.uber.org/zap"
 
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
@@ -46,7 +46,7 @@ func validateUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		// TODO: do something like set user from jwt token
 		var err error
 		if err != nil {
-			zap.L().Warn(err.Error())
+			slog.Warn(err.Error())
 			return ctx.Redirect(http.StatusFound, "/logout")
 		}
 
@@ -64,12 +64,12 @@ func validateAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		var u *User
 		if u == nil || !u.Active {
-			zap.L().Warn("User is not found")
+			slog.Warn("User is not found")
 			return ctx.Redirect(http.StatusFound, "/logout")
 		}
 
 		if !u.Admin {
-			zap.L().Warn("User is not an admin")
+			slog.Warn("User is not an admin")
 			return ctx.Redirect(http.StatusFound, "/dashboard")
 		}
 

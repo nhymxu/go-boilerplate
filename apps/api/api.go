@@ -2,14 +2,13 @@ package api
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"slices"
 
 	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
@@ -25,8 +24,6 @@ func New() *echo.Echo {
 
 func newEchoApp() *echo.Echo {
 	e := echo.New()
-
-	logger := zap.L()
 
 	skipPaths := []string{
 		"/favicon.ico",
@@ -65,27 +62,28 @@ func newEchoApp() *echo.Echo {
 			LogHost:         true,
 			HandleError:     true,
 			LogValuesFunc: func(c *echo.Context, v middleware.RequestLoggerValues) error { // nolint:revive
-				fields := []zapcore.Field{
-					zap.String("remote_ip", v.RemoteIP),
-					zap.Duration("latency", v.Latency),
-					zap.String("host", v.Host),
-					zap.String("request", fmt.Sprintf("%s %s", v.Method, v.URI)),
-					zap.Int("status", v.Status),
-					zap.Int64("size", v.ResponseSize),
-					zap.String("user_agent", v.UserAgent),
-					zap.String("request_id", v.RequestID),
+				attrs := []slog.Attr{
+					slog.String("remote_ip", v.RemoteIP),
+					slog.Duration("latency", v.Latency),
+					slog.String("host", v.Host),
+					slog.String("request", fmt.Sprintf("%s %s", v.Method, v.URI)),
+					slog.Int("status", v.Status),
+					slog.Int64("size", v.ResponseSize),
+					slog.String("user_agent", v.UserAgent),
+					slog.String("request_id", v.RequestID),
 				}
 
 				n := v.Status
 				switch {
 				case n >= 500:
-					logger.With(zap.Error(v.Error)).Error("Server error", fields...)
+					slog.LogAttrs(c.Request().Context(), slog.LevelError, "Server error",
+						append(attrs, slog.Any("error", v.Error))...)
 				case n >= 400:
-					logger.Info("Client error", fields...)
+					slog.LogAttrs(c.Request().Context(), slog.LevelWarn, "Client error", attrs...)
 				case n >= 300:
-					logger.Info("Redirection", fields...)
+					slog.LogAttrs(c.Request().Context(), slog.LevelInfo, "Redirection", attrs...)
 				default:
-					logger.Info("Success", fields...)
+					slog.LogAttrs(c.Request().Context(), slog.LevelInfo, "Success", attrs...)
 				}
 
 				return nil

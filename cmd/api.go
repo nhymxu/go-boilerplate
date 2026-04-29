@@ -3,13 +3,13 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"time"
 
 	"github.com/labstack/echo/v5"
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 
 	"github.com/nhymxu/go-boilerplate/apps/api"
 	"github.com/nhymxu/go-boilerplate/pkg/config"
@@ -46,12 +46,12 @@ Can scale later.`,
 			HideBanner:      true,
 			GracefulTimeout: time.Duration(shutdownTime) * time.Second,
 			OnShutdownError: func(err error) {
-				zap.L().Sugar().Errorf("graceful shutdown error: %v", err)
+				slog.Error("graceful shutdown error", "error", err)
 			},
 		}
 
 		if err := sc.Start(ctx, e); err != nil {
-			zap.L().Sugar().Fatalf("shutting down the server. Err: %v", err)
+			slog.Error("shutting down the server", "error", err)
 		}
 	},
 }
