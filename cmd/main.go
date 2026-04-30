@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"runtime/debug"
 	"time"
 
 	"github.com/getsentry/sentry-go"
 	_ "go.uber.org/automaxprocs"
-
-	"github.com/nhymxu/go-boilerplate/cmd"
 )
 
 func main() {
@@ -26,5 +25,7 @@ func main() {
 		}
 	}()
 
-	cmd.Execute()
+	if err := newApp().Run(os.Args); err != nil {
+		os.Exit(1)
+	}
 }

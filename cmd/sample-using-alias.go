@@ -1,20 +1,19 @@
-package cmd
+package main
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/urfave/cli/v2"
 
 	"rootPrj/apps/sample-using-alias"
 )
 
-var sampleAliasCmd = &cobra.Command{
-	Use:   "sample-alias",
-	Short: "Sample using alias",
-	Long:  `Sample using alias, without long project name`,
-	Run: func(_ *cobra.Command, _ []string) {
-		sample_using_alias.Run()
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(sampleAliasCmd)
+func sampleAliasCommand() *cli.Command {
+	return &cli.Command{
+		Name:        "sample-alias",
+		Usage:       "Sample using alias",
+		Description: `Sample using alias, without long project name`,
+		Action: func(_ *cli.Context) error {
+			sample_using_alias.Run()
+			return nil
+		},
+	}
 }

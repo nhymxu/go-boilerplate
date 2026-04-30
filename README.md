@@ -24,7 +24,7 @@ go get -u ./...
 
 ```shell
 # API server
-go run main.go api --port 8000 --shutdown_time 10
+go run ./cmd/ api --port 8000 --shutdown_time 10
 ```
 
 ## Linting
