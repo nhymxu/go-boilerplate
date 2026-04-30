@@ -1,6 +1,6 @@
 module github.com/nhymxu/go-boilerplate
 
-go 1.25.1
+go 1.26.2
 
 replace rootPrj => ./
 
