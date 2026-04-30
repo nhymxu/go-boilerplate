@@ -5,7 +5,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"rootPrj/apps/sample-using-alias"
+	"rootPrj/app/sample-using-alias"
 )
 
 func sampleAliasCommand() *cli.Command {
