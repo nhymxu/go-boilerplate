@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"runtime/debug"
@@ -25,7 +26,7 @@ func main() {
 		}
 	}()
 
-	if err := newApp().Run(os.Args); err != nil {
+	if err := newApp().Run(context.Background(), os.Args); err != nil {
 		os.Exit(1)
 	}
 }

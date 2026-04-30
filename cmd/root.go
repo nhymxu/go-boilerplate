@@ -1,19 +1,20 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"os"
 
 	"github.com/getsentry/sentry-go"
 	slogmulti "github.com/samber/slog-multi"
 	slogsentry "github.com/samber/slog-sentry/v2"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 
-func newApp() *cli.App {
-	return &cli.App{
+func newApp() *cli.Command {
+	return &cli.Command{
 		Name:  "sample-project", // TODO: change project name here
 		Usage: "A brief description of your application",
 		Description: `A longer description that spans multiple lines and likely contains
@@ -25,9 +26,9 @@ examples and usage of using your application.`,
 				Usage: "config file (default is $APPLICATION_DIR/.env)",
 			},
 		},
-		Before: func(c *cli.Context) error {
-			dependencyInit(c.String("config"))
-			return nil
+		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+			dependencyInit(cmd.String("config"))
+			return ctx, nil
 		},
 		Commands: []*cli.Command{
 			apiCommand(),

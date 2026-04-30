@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v5"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/nhymxu/go-boilerplate/apps/api"
 	"github.com/nhymxu/go-boilerplate/pkg/config"
@@ -38,10 +38,10 @@ Can scale later.`,
 				Usage: "Gracefully shutdown time",
 			},
 		},
-		Action: func(c *cli.Context) error {
-			host := c.String("host")
-			port := c.Int64("port")
-			shutdownTime := c.Int64("shutdown_time")
+		Action: func(_ context.Context, cmd *cli.Command) error {
+			host := cmd.String("host")
+			port := cmd.Int64("port")
+			shutdownTime := cmd.Int64("shutdown_time")
 
 			e := api.New()
 
