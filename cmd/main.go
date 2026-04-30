@@ -1,14 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"runtime/debug"
 	"time"
 
 	"github.com/getsentry/sentry-go"
 	_ "go.uber.org/automaxprocs"
-
-	"github.com/nhymxu/go-boilerplate/cmd"
 )
 
 func main() {
@@ -26,5 +26,7 @@ func main() {
 		}
 	}()
 
-	cmd.Execute()
+	if err := newApp().Run(context.Background(), os.Args); err != nil {
+		os.Exit(1)
+	}
 }
