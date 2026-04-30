@@ -13,14 +13,6 @@ import (
 	"github.com/knadh/koanf/v2"
 )
 
-// configDefaults holds default values for all config fields.
-// Nested struct fields use dot-separated koanf tag paths (e.g. "SENTRY.DSN").
-var configDefaults = map[string]any{
-	"DEBUG":      false,
-	"SENTRY.DSN": "",
-	"TOKEN_AUTH": "",
-}
-
 // EnvConfigMap define mapping struct field and environment field
 type EnvConfigMap struct {
 	Debug  bool `koanf:"DEBUG"`
