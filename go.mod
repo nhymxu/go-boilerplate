@@ -6,7 +6,7 @@ replace rootPrj => ./
 
 require (
 	github.com/getsentry/sentry-go v0.46.2
-	github.com/getsentry/sentry-go/echo v0.46.1
+	github.com/getsentry/sentry-go/echo v0.46.2
 	github.com/knadh/koanf/parsers/dotenv v1.1.1
 	github.com/knadh/koanf/providers/confmap v1.0.0
 	github.com/knadh/koanf/providers/env v1.1.0
