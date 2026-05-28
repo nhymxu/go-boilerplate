@@ -25,6 +25,8 @@ func New() *echo.Echo {
 func newEchoApp() *echo.Echo {
 	e := echo.New()
 
+	e.HTTPErrorHandler = JSONErrorHandler
+
 	skipPaths := []string{
 		"/favicon.ico",
 		"/swagger",
@@ -93,4 +95,15 @@ func newEchoApp() *echo.Echo {
 	)
 
 	return e
+}
+
+func JSONErrorHandler(c *echo.Context, err error) {
+	code := http.StatusInternalServerError
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+
+	if err2 := c.JSON(code, map[string]string{"error": http.StatusText(code)}); err2 != nil {
+		slog.Error("error handler: json response", "error", err2)
+	}
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/urfave/cli/v3"
 
-	"github.com/nhymxu/go-boilerplate/app/api"
+	"github.com/nhymxu/go-boilerplate/internal/api"
 	"github.com/nhymxu/go-boilerplate/pkg/config"
 )
 

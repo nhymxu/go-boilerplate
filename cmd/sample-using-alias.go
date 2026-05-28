@@ -5,7 +5,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"rootPrj/app/sample-using-alias"
+	"github.com/nhymxu/go-boilerplate/internal/sample-using-alias"
 )
 
 func sampleAliasCommand() *cli.Command {
