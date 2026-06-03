@@ -46,8 +46,8 @@ github.com/samber/slog-common v0.22.0 h1:WyPxYRg/c5xUmxZJbtd0QgysHlLBhRA+MngKdJi
 github.com/samber/slog-common v0.22.0/go.mod h1:d/6OaSlzdkl9PFpfRLgn8FwY1OW6EFmPtBpsHX4MrU0=
 github.com/samber/slog-multi v1.8.0 h1:E05c1wnQ+8M58oQDBABlJ4TEIJWssNgtckso3zlaLlI=
 github.com/samber/slog-multi v1.8.0/go.mod h1:6+3j/ILxDvAcLD75YdQAm6iKWu6AmwlohLgQxL/2aiI=
-github.com/samber/slog-sentry/v2 v2.10.3 h1:MYKqJ/94PfH0mg/oxOJ8auBKZa6gzOgMApx+8P5sUa8=
-github.com/samber/slog-sentry/v2 v2.10.3/go.mod h1:q5iKQf4IsB+Aje9xIFu2tUlpO5RpqCFsWvUyFz3o470=
+github.com/samber/slog-sentry/v2 v2.11.0 h1:bSl5WCaotQI5UEjij2t2ZYrM/Y8yEv9DyMXbmuaEf4s=
+github.com/samber/slog-sentry/v2 v2.11.0/go.mod h1:MG+yubcE7hz+B8E0vsV6QgrRj1h8QzFoZ/2lrqjk64s=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
 github.com/urfave/cli/v3 v3.9.0 h1:AV9lIiPv3ukYnxunaCUsHnEozptYmDN2F0+yWqLMn/c=
