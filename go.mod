@@ -1,6 +1,6 @@
 module github.com/nhymxu/go-boilerplate
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/getsentry/sentry-go v0.46.2
