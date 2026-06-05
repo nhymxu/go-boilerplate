@@ -5,6 +5,7 @@ go 1.26.4
 require (
 	github.com/getsentry/sentry-go v0.46.2
 	github.com/getsentry/sentry-go/echo v0.46.2
+	github.com/jinzhu/copier v0.4.0
 	github.com/labstack/echo/v5 v5.1.1
 	github.com/nhymxu/gommon v0.0.0-20260605024132-35b8504c000e
 	github.com/samber/slog-multi v1.8.0
