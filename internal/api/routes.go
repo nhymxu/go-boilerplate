@@ -24,7 +24,7 @@ func privateRoutesV1(e *echo.Group) *echo.Group {
 	privateGroup := e.Group("")
 	// TODO: can change to JWT auth later: https://echo.labstack.com/docs/middleware/jwt
 	privateGroup.Use(middleware.KeyAuth(func(_ *echo.Context, key string, _ middleware.ExtractorSource) (bool, error) {
-		return key == config.ENV.TokenAuth, nil
+		return key == config.C.TokenAuth, nil
 	}))
 	privateGroup.Use(validateUserMiddleware)
 	privateGroup.GET("/test_private", testFuncPrivate)

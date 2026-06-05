@@ -12,12 +12,12 @@ type EnvConfigMap struct {
 	TokenAuth string `koanf:"TOKEN_AUTH"`
 }
 
-// ENV is global variable for using config in other place
-var ENV EnvConfigMap
+// C is global variable for using config in other place
+var C EnvConfigMap
 
 // LoadConfig read env file and loaded to environment and global ENV variable
 func LoadConfig(cfgFile string) error {
 	var err error
-	ENV, err = cfgloader.LoadConfig[EnvConfigMap](cfgFile, configDefaults)
+	C, err = cfgloader.LoadConfig[EnvConfigMap](cfgFile, configDefaults)
 	return err
 }
