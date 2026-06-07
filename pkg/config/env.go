@@ -33,6 +33,8 @@ var C Config
 // Load read env file and loaded to environment and global ENV variable
 func Load(cfgFile string) error {
 	var err error
+
 	C, err = cfgloader.LoadConfig[Config](cfgFile, configDefaults)
+
 	return err
 }
