@@ -14,6 +14,13 @@ deps: ## Install dependencies
 	go mod download
 	go mod tidy
 
+.PHONY: dev
+dev: ## Run dev servers with Go live-reload (air) + Vite HMR
+	@echo "Installing air if not present..."
+	@command -v air >/dev/null 2>&1 || go install github.com/air-verse/air@latest
+	@trap 'kill 0' EXIT INT TERM; \
+	air
+
 .PHONY: check-fmt
 check-fmt: ## Ensure code is formatted
 	gofmt -l -d . 	# For the sake of debugging
