@@ -11,7 +11,7 @@ require (
 	github.com/nhymxu/gommon v0.0.0-20260605024132-35b8504c000e
 	github.com/samber/slog-multi v1.8.0
 	github.com/samber/slog-sentry/v2 v2.11.0
-	github.com/urfave/cli/v3 v3.9.0
+	github.com/urfave/cli/v3 v3.10.0
 	go.uber.org/automaxprocs v1.6.0
 )
 
