@@ -3,7 +3,7 @@ module github.com/nhymxu/go-boilerplate
 go 1.26.4
 
 require (
-	github.com/getsentry/sentry-go v0.46.2
+	github.com/getsentry/sentry-go v0.47.0
 	github.com/getsentry/sentry-go/echo v0.46.2
 	github.com/jinzhu/copier v0.4.0
 	github.com/labstack/echo/v5 v5.2.1
