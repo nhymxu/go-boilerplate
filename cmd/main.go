@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
-	_ "go.uber.org/automaxprocs"
 )
 
 func main() {
