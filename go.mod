@@ -6,7 +6,7 @@ require (
 	github.com/getsentry/sentry-go v0.50.0
 	github.com/getsentry/sentry-go/echo v0.50.0
 	github.com/jinzhu/copier v0.4.0
-	github.com/labstack/echo/v5 v5.4.6
+	github.com/labstack/echo/v5 v5.4.7
 	github.com/lmittmann/tint v1.2.1
 	github.com/nhymxu/gommon v0.0.0-20260806031531-7b6430bdec4a
 	github.com/samber/slog-multi v1.9.0
